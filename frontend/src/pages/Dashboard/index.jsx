@@ -4,22 +4,22 @@ import { faRightLong } from "@fortawesome/free-solid-svg-icons";
 
 // Komponen untuk menampilkan skor utama dalam bentuk lingkaran
 const ScoreCircle = ({ score }) => {
-  const percentage = (score / 500) * 100; // Asumsi skor maksimal 500
-  const circumference = 2 * Math.PI * 80; // Radius diperbesar menjadi 80
+  const percentage = (score / 500) * 100; 
+  const circumference = 2 * Math.PI * 80; 
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    // Ukuran div kontainer diperbesar menjadi 80 (320px)
+  
     <div className="relative w-75 h-96 mx-auto">
-      <svg className="w-full h-full" viewBox="0 0 180 180"> {/* viewBox disesuaikan */}
+      <svg className="w-full h-full" viewBox="0 0 180 180"> 
         {/* Lingkaran latar belakang */}
         <circle
           cx="90"
           cy="90"
           r="80"
           fill="transparent"
-          stroke="#374151" // slate-700
-          strokeWidth="14" // Ketebalan disesuaikan
+          stroke="#374151" 
+          strokeWidth="14" 
         />
         {/* Lingkaran progres */}
         <circle
@@ -27,7 +27,7 @@ const ScoreCircle = ({ score }) => {
           cy="90"
           r="80"
           fill="transparent"
-          stroke="#56E1E9" // cyan-400
+          stroke="#56E1E9" 
           strokeWidth="14"
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -37,8 +37,8 @@ const ScoreCircle = ({ score }) => {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-6xl font-bold text-white">{score}</span> {/* Ukuran font skor diperbesar */}
-        <span className="text-xl text-slate-400 mt-2">Skor Rata-rata</span> {/* Ukuran font label disesuaikan */}
+        <span className="text-6xl font-bold text-white">{score}</span> 
+        <span className="text-xl text-slate-400 mt-2">Skor Rata-rata</span> 
       </div>
     </div>
   );
@@ -76,7 +76,6 @@ const Dashboard = () => {
         </p>
       </div>
 
-      {/* Tata letak diubah menjadi 2 kolom utama */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Kolom Kiri: Skor dan Tombol Scan */}
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center flex flex-col justify-between">

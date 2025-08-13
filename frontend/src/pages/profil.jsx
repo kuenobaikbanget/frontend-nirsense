@@ -2,8 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
-
-// Impor gambar siluet lokal dari direktori assets
 import defaultProfileImage from "../assets/no-profile.png";
 
 const ProfileEditScreen = () => {
@@ -14,7 +12,7 @@ const ProfileEditScreen = () => {
     age: 28,
     skinTone: "Kuning Langsat",
     goals: 450,
-    // Gunakan gambar yang sudah diimpor sebagai nilai awal
+    
     profileImage: defaultProfileImage,
   });
 
@@ -67,7 +65,6 @@ const ProfileEditScreen = () => {
               <img
                 src={profile.profileImage}
                 alt="Profile"
-                // Menghapus kelas 'bg-slate-700' untuk memastikan background transparan
                 className="w-32 h-32 rounded-full object-cover border-4 border-cyan-400"
                 onError={(e) => {
                   e.target.onerror = null;
@@ -157,8 +154,7 @@ const ProfileEditScreen = () => {
 
           <button
             onClick={handleSave}
-            className="w-full bg-cyan-500 hover:bg-cyan-600 transition-colors text-black font-medium py-3 rounded-lg"
-          >
+            className="w-full bg-cyan-500 hover:bg-cyan-600 transition-colors text-black font-medium py-3 rounded-lg">
             Simpan Perubahan
           </button>
         </div>
