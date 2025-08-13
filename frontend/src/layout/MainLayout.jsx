@@ -5,7 +5,7 @@ const MainLayout = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#112C70] via-[#0c286c] to-[#0A1A3A] text-white">
       <Navbar />
-      <main className="pt-5 pb-10 px-4 container mx-auto">
+      <main className="p-8">
         <Outlet />
       </main>
     </div>

@@ -5,39 +5,40 @@ import { faRightLong } from "@fortawesome/free-solid-svg-icons";
 // Komponen untuk menampilkan skor utama dalam bentuk lingkaran
 const ScoreCircle = ({ score }) => {
   const percentage = (score / 500) * 100; // Asumsi skor maksimal 500
-  const circumference = 2 * Math.PI * 45;
+  const circumference = 2 * Math.PI * 80; // Radius diperbesar menjadi 80
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative w-48 h-48 mx-auto">
-      <svg className="w-full h-full" viewBox="0 0 100 100">
+    // Ukuran div kontainer diperbesar menjadi 80 (320px)
+    <div className="relative w-75 h-96 mx-auto">
+      <svg className="w-full h-full" viewBox="0 0 180 180"> {/* viewBox disesuaikan */}
         {/* Lingkaran latar belakang */}
         <circle
-          cx="50"
-          cy="50"
-          r="45"
+          cx="90"
+          cy="90"
+          r="80"
           fill="transparent"
           stroke="#374151" // slate-700
-          strokeWidth="10"
+          strokeWidth="14" // Ketebalan disesuaikan
         />
         {/* Lingkaran progres */}
         <circle
-          cx="50"
-          cy="50"
-          r="45"
+          cx="90"
+          cy="90"
+          r="80"
           fill="transparent"
           stroke="#56E1E9" // cyan-400
-          strokeWidth="10"
+          strokeWidth="14"
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
-          transform="rotate(-90 50 50)"
+          transform="rotate(-90 90 90)"
           className="transition-all duration-1000 ease-out"
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl font-bold text-white">{score}</span>
-        <span className="text-sm text-slate-400">Skor Rata-rata</span>
+        <span className="text-6xl font-bold text-white">{score}</span> {/* Ukuran font skor diperbesar */}
+        <span className="text-xl text-slate-400 mt-2">Skor Rata-rata</span> {/* Ukuran font label disesuaikan */}
       </div>
     </div>
   );
@@ -46,35 +47,24 @@ const ScoreCircle = ({ score }) => {
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Data disamakan dengan file scanDetail.jsx
   const lastScanData = {
-    overallScore: 440,
-    status: "Cukup Baik",
+    overallScore: 408,
+    status: "Sangat Baik",
     date: "5 Agustus 2025",
-    summary: "Fokus pada makanan kaya karotenoid dan antioksidan untuk meningkatkan level antioksidan kulit.",
+    summary: "Skor antioksidan Anda menunjukkan peningkatan. Pertahankan!",
     areas: [
-        { name: "Dahi", value: 385, color: "#FF6B35" },
-        { name: "Pipi Kiri", value: 375, color: "#F7931E" },
-        { name: "Pipi Kanan", value: 380, color: "#FFD23F" },
-        { name: "Hidung", value: 370, color: "#06FFA5" },
-        { name: "Dagu", value: 390, color: "#4ECDC4" },
+      { name: "Dahi", value: 410, color: "#3B82F6" },
+      { name: "Pipi Kiri", value: 415, color: "#8B5CF6" },
+      { name: "Pipi Kanan", value: 405, color: "#10B981" },
+      { name: "Hidung", value: 400, color: "#F59E0B" },
+      { name: "Dagu", value: 420, color: "#EF4444" },
     ],
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Sangat Baik":
-        return "text-green-400";
-      case "Baik":
-        return "text-cyan-400";
-      case "Cukup Baik":
-      case "Cukup":
-        return "text-yellow-400";
-      case "Kurang":
-        return "text-red-400";
-      default:
-        return "text-orange-400";
-    }
+    if (status === "Sangat Baik") return "text-emerald-400";
+    if (status === "Baik") return "text-cyan-400";
+    return "text-amber-400";
   };
 
   return (
@@ -86,8 +76,10 @@ const Dashboard = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center flex flex-col justify-between">
+      {/* Tata letak diubah menjadi 2 kolom utama */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Kolom Kiri: Skor dan Tombol Scan */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center flex flex-col justify-between">
           <div>
             <h2 className="text-xl font-semibold text-white mb-4">
               Skor Karotenoid Anda
@@ -107,7 +99,8 @@ const Dashboard = () => {
           </button>
         </div>
 
-        <div className="lg:col-span-2 flex flex-col gap-8">
+        {/* Kolom Kanan: Ringkasan dan Detail Area */}
+        <div className="flex flex-col gap-8">
           <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20">
             <h2 className="text-xl font-semibold text-white mb-4">
               Ringkasan Pemindaian Terakhir
