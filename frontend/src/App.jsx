@@ -2,7 +2,7 @@ import "./App.css";
 import "./styles/index.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layout/MainLayout.jsx";
-import Login from "./pages/login.jsx";
+// import Login from "./pages/login.jsx";
 import Dashboard from "./pages/Dashboard/index.jsx";
 import History from "./pages/History/index.jsx";
 import ScanResults from "./pages/Dashboard/scanResult.jsx";
@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="results" element={<ScanResults />} />
