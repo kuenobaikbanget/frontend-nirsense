@@ -9,7 +9,6 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Menutup dropdown jika pengguna mengklik di luar area menu
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -26,16 +25,18 @@ const Navbar = () => {
     `flex items-center w-full px-4 py-3 text-left text-lg transition-colors duration-200 rounded-lg ${
       isActive
         ? "bg-cyan-500 text-black"
-        : "text-slate-300 hover:bg-slate-700 hover:text-white"
+        : "text-slate-300 hover:bg-slate-700/60 hover:text-white"
     }`;
 
   return (
-    <nav className="sticky top-0 bg-slate-800/60 backdrop-blur-md w-full z-50 shadow-lg shadow-black/20">
+    <nav className="sticky top-0 bg-white/10 backdrop-blur-lg w-full z-50 shadow-lg shadow-black/20">
       <div className="container mx-auto flex justify-between items-center p-4 text-white">
         {/* Bagian Kiri: Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <img src={logo} alt="Nirsense Logo" className="h-10 w-auto" />
-          <h1 className="text-2xl font-bold">NIRSENSE</h1>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-[#56E1E9] bg-clip-text text-transparent">
+            NIRSENSE
+          </h1>
         </Link>
 
         {/* Bagian Kanan: Profil dan Hamburger Menu */}
@@ -47,23 +48,22 @@ const Navbar = () => {
             <img
               src={defaultProfileImage}
               alt="Profile"
-              className="w-10 h-10 rounded-full object-cover border-2 border-cyan-400 group-hover:border-cyan-300 transition-colors"
+              className="w-10 h-10 rounded-full object-cover border-2 border-white group-hover:border-cyan-300 transition-colors"
             />
           </Link>
           
-          {/* Hamburger Menu */}
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-full hover:bg-slate-700 transition-colors"
+              className="p-2 rounded-full hover:bg-slate-700/60 transition-colors"
               aria-label="Buka Menu"
             >
               <FontAwesomeIcon icon={faBars} className="text-2xl" />
             </button>
 
-            {/* Dropdown Menu dengan Animasi */}
+            {/* Dropdown Menu dengan latar belakang transparan */}
             <div
-              className={`absolute right-0 mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-lg p-2 transition-all duration-300 ease-in-out transform ${
+              className={`absolute right-0 mt-2 w-56 bg-slate-800/80 backdrop-blur-lg border border-slate-700 rounded-xl shadow-lg p-2 transition-all duration-300 ease-in-out transform ${
                 isMenuOpen
                   ? "opacity-100 scale-100"
                   : "opacity-0 scale-95 pointer-events-none"

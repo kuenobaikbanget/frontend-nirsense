@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightLong } from "@fortawesome/free-solid-svg-icons";
 
 const getStatusGradient = (score) => {
   if (score > 400) return "from-emerald-400 to-teal-500";
@@ -14,6 +17,7 @@ const getStatusText = (score) => {
 
 const ScanResults = () => {
   const [animationComplete, setAnimationComplete] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimationComplete(true), 500);
@@ -26,7 +30,7 @@ const ScanResults = () => {
     karotenoid: 460,
     karotenoidReadings: [
       { name: "Dahi", value: 460, color: "#FF6B35", status: "Baik"},
-      { name: "Pipi Kiri", value: null, color: "#F7931E", status: "Belum Dipindai"},
+      { name: "Pipi Kiri", value: null, color: "#F79E1E", status: "Belum Dipindai"},
       { name: "Pipi Kanan", value: null, color: "#FFD23F", status: "Belum Dipindai"},
       { name: "Hidung", value: null, color: "#06FFA5", status: "Belum Dipindai"},
       { name: "Dagu", value: null, color: "#4ECDC4", status: "Belum Dipindai"},
@@ -44,7 +48,7 @@ const ScanResults = () => {
   const AreaCard = ({ reading, index }) => {
     const isScanned = reading.value !== null;
     return (
-        <div
+      <div
         className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
           isScanned
             ? "bg-gradient-to-br from-white/10 to-white/5 border-white/20"
@@ -54,14 +58,14 @@ const ScanResults = () => {
       >
         <div className="relative p-6">
           <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                  <div
-                      className="w-4 h-4 rounded-full mr-3 shadow-lg"
-                      style={{ backgroundColor: reading.color, boxShadow: `0 0 10px ${reading.color}40` }}
-                  ></div>
-                  <span className="font-semibold text-white text-lg">{reading.name}</span>
-              </div>
-              <span className={`text-xs font-medium px-3 py-1 rounded-full ${isScanned ? "text-cyan-300 bg-cyan-500/10" : "text-slate-300 bg-slate-700/50"}`}>{reading.status}</span>
+            <div className="flex items-center">
+              <div
+                className="w-4 h-4 rounded-full mr-3 shadow-lg"
+                style={{ backgroundColor: reading.color, boxShadow: `0 0 10px ${reading.color}40` }}
+              ></div>
+              <span className="font-semibold text-white text-lg">{reading.name}</span>
+            </div>
+            <span className={`text-xs font-medium px-3 py-1 rounded-full ${isScanned ? "text-cyan-300 bg-cyan-500/10" : "text-slate-300 bg-slate-700/50"}`}>{reading.status}</span>
           </div>
           {isScanned ? (
             <div>
@@ -83,11 +87,11 @@ const ScanResults = () => {
             </div>
           ) : (
             <div className="text-center py-8">
-                <div className="w-8 h-8 mx-auto rounded-full bg-slate-700/50 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </div>
+              <div className="w-8 h-8 mx-auto rounded-full bg-slate-700/50 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
             </div>
           )}
         </div>
@@ -126,7 +130,7 @@ const ScanResults = () => {
           <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl flex-grow">
             <h3 className="text-xl font-semibold mb-4 text-center">Apa itu Karotenoid?</h3>
             <p className="text-slate-200 leading-relaxed text-base text-justify">
-              Karotenoid adalah pigmen alami dan antioksidan kuat. Skor yang tinggi menunjukkan pertahanan kulit yang kuat terhadap kerusakan akibat radikal bebas dan sinar UV. 
+              Karotenoid adalah pigmen alami dan antioksidan kuat. Skor yang tinggi menunjukkan pertahanan kulit yang kuat terhadap kerusakan akibat radikal bebas dan sinar UV.
               Oleh karena itu, karotenoid yang terakumulasi di dalam lapisan kulit bertindak sebagai perisai internal pertama. Mereka membantu menyerap radiasi UV dan menetralkan radikal bebas sebelum sempat merusak struktur penting seperti kolagen dan elastin, yang menjaga kulit tetap kencang dan kenyal.
             </p>
           </div>
@@ -152,6 +156,20 @@ const ScanResults = () => {
             </div>
           ))}
         </div>
+      </div>
+      
+      {/* Tombol Lihat Riwayat */}
+      <div className="mt-8 text-center">
+        <button
+          onClick={() => navigate("/history")}
+          className="group bg-transparent text-cyan-400 py-3 px-6 rounded-xl font-semibold hover:text-white transition-colors text-lg"
+        >
+          <span>Lihat Riwayat Pemeriksaan</span>
+          <FontAwesomeIcon
+            icon={faRightLong}
+            className="ml-2 transform group-hover:translate-x-2 transition-transform"
+          />
+        </button>
       </div>
     </div>
   );
