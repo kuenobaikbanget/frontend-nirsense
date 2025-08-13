@@ -1,208 +1,155 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  // faPowerOff,
-  faSprayCan,
-  faMobileAlt,
-  faStopwatch,
-  faChartBar,
-  // faExpand,
-  // faSpinner,
-  faCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faRightLong } from "@fortawesome/free-solid-svg-icons";
 
-const instructionSteps = [
-  // {
-  //   step: 1,
-  //   title: "Persiapkan Perangkat",
-  //   description:
-  //     "Pastikan NIRSENSE sudah terhubung ke power dan terpasang dengan benar",
-  //   icon: faPowerOff,
-  // },
-  {
-    step: 1,
-    title: "Bersihkan Wajah",
-    description:
-      "Bersihkan wajah dari makeup, kotoran, atau minyak berlebih untuk hasil akurat",
-    icon: faSprayCan,
-  },
-  {
-    step: 2,
-    title: "Pilih Area Wajah",
-    description:
-      "Pilih area wajah yang ingin dianalisis dengan mengklik ikon di bawah",
-    icon: faCircle,
-  },
-  {
-    step: 3,
-    title: "Posisikan Alat",
-    description:
-      "Dekatkan sensor pada area wajah yang ingin dianalisis (jarak 2-3cm)",
-    icon: faMobileAlt,
-  },
-  {
-    step: 4,
-    title: "Mulai Scanning",
-    description: "Tekan tombol scan dan tetap diam selama 5-10 detik",
-    icon: faStopwatch,
-  },
-  {
-    step: 5,
-    title: "Lihat Hasil Deteksi",
-    description: "Hasil analisis akan muncul beserta rekomendasi perawatan",
-    icon: faChartBar,
-  },
-];
+// Komponen untuk menampilkan skor utama dalam bentuk lingkaran
+const ScoreCircle = ({ score }) => {
+  const percentage = (score / 500) * 100; // Asumsi skor maksimal 500
+  const circumference = 2 * Math.PI * 45;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-const faceAreas = [
-  {
-    id: "dahi",
-    name: "Dahi",
-    position: "top-6 left-1/2 transform -translate-x-1/2",
-  },
-  {
-    id: "pipi-kiri",
-    name: "Pipi Kiri",
-    position: "top-1/2 left-4 transform -translate-y-1/2",
-  },
-  {
-    id: "hidung",
-    name: "Hidung",
-    position: "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-  },
-  {
-    id: "pipi-kanan",
-    name: "Pipi Kanan",
-    position: "top-1/2 right-4 transform -translate-y-1/2",
-  },
-  {
-    id: "dagu",
-    name: "Dagu",
-    position: "bottom-6 left-1/2 transform -translate-x-1/2",
-  },
-];
+  return (
+    <div className="relative w-48 h-48 mx-auto">
+      <svg className="w-full h-full" viewBox="0 0 100 100">
+        {/* Lingkaran latar belakang */}
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          fill="transparent"
+          stroke="#374151" // slate-700
+          strokeWidth="10"
+        />
+        {/* Lingkaran progres */}
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          fill="transparent"
+          stroke="#56E1E9" // cyan-400
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          transform="rotate(-90 50 50)"
+          className="transition-all duration-1000 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-4xl font-bold text-white">{score}</span>
+        <span className="text-sm text-slate-400">Skor Rata-rata</span>
+      </div>
+    </div>
+  );
+};
 
 const Dashboard = () => {
-  const [isScanning, setIsScanning] = useState(false);
   const navigate = useNavigate();
-  const [selectedArea, setSelectedArea] = useState("");
 
-  const handleScanDemo = () => {
-    setIsScanning(true);
-    setTimeout(() => {
-      setIsScanning(false);
-      navigate("/results");
-    }, 3000);
+  // Data disamakan dengan file scanDetail.jsx
+  const lastScanData = {
+    overallScore: 440,
+    status: "Cukup Baik",
+    date: "5 Agustus 2025",
+    summary: "Fokus pada makanan kaya karotenoid dan antioksidan untuk meningkatkan level antioksidan kulit.",
+    areas: [
+        { name: "Dahi", value: 385, color: "#FF6B35" },
+        { name: "Pipi Kiri", value: 375, color: "#F7931E" },
+        { name: "Pipi Kanan", value: 380, color: "#FFD23F" },
+        { name: "Hidung", value: 370, color: "#06FFA5" },
+        { name: "Dagu", value: 390, color: "#4ECDC4" },
+    ],
   };
-  const handleAreaSelect = (areaId) => {
-    if (selectedArea === areaId) {
-      setSelectedArea("");
-    } else {
-      setSelectedArea(areaId);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Sangat Baik":
+        return "text-green-400";
+      case "Baik":
+        return "text-cyan-400";
+      case "Cukup Baik":
+      case "Cukup":
+        return "text-yellow-400";
+      case "Kurang":
+        return "text-red-400";
+      default:
+        return "text-orange-400";
     }
   };
 
   return (
-    <div className="max-w-md lg:max-w-5xl md:max-w-2xl mx-auto mt-2">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-[#56E1E9]">NIRSENSE</h1>
-        <p className="text-white italic">
-          Pahami Kulit dengan Cara yang Make Sense
+    <div className="max-w-5xl mx-auto p-4 animate-fade-in">
+      <div className="text-left mb-8">
+        <h1 className="text-4xl font-bold text-white">Selamat Datang, John!</h1>
+        <p className="text-slate-300 text-lg">
+          Lihat progres kesehatan kulitmu hari ini.
         </p>
       </div>
 
-      <div className=" bg-slate-600/40 backdrop-blur-sm rounded-2xl p-6 border border-slate-600 border-opacity-20 mb-8">
-        <div className="space-y-5">
-          <h2 className="text-xl font-semibold text-center">
-            Cara Penggunaan Alat
-          </h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 gap-6">
-            {instructionSteps.map((item) => (
-              <div
-                key={item.step}
-                className="bg-slate-400/50 p-5 rounded-lg hover:bg-slate-600/50 transition-colors duration-200"
-              >
-                <div className="flex items-center mb-3">
-                  <FontAwesomeIcon icon={item.icon} className="text-2xl mr-3" />
-                  <div>
-                    <span className="text-[#56E1E9] font-semibold">
-                      Step {item.step}
-                    </span>
-                    <h3 className="font-medium text-white">{item.title}</h3>
-                  </div>
-                </div>
-                <p className="text-gray-300 text-sm">{item.description}</p>
-              </div>
-            ))}
-          </div>
-          <div className="text-center  rounded-lg">
-            <div className="bg-slate-600/50 rounded-lg p-6">
-              <h3 className="text-lg font-medium mb-4 text-center text-white">
-                Pilih Area Wajah untuk Dianalisis
-              </h3>
-
-              <div className="flex justify-center">
-                <div className="relative w-48 h-60">
-                  <div className="absolute inset-2 bg-slate-800/30 rounded-full"></div>
-
-                  {faceAreas.map((area) => (
-                    <button
-                      key={area.id}
-                      onClick={() => handleAreaSelect(area.id)}
-                      className={`absolute w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
-                        area.position
-                      } ${
-                        selectedArea === area.id
-                          ? "bg-[#56E1E9] border-[#49d1d8] shadow-lg shadow-[#74a1a3]"
-                          : "bg-slate-600 border-slate-400 hover:bg-slate-500"
-                      }`}
-                      title={area.name}
-                    >
-                      {selectedArea === area.id && (
-                        <span className="text-white text-xs font-bold"></span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1 bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center flex flex-col justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Skor Karotenoid Anda
+            </h2>
+            <div className="flex justify-center mb-4">
+              <ScoreCircle score={lastScanData.overallScore} />
             </div>
-            {/* <div
-              className={`w-24 h-24 mx-auto rounded-full border-3 flex items-center justify-center my-4 ${
-                isScanning
-                  ? "border-[#56E1E9] animate-pulse"
-                  : "border-gray-500"
-              }`}
-            >
-              <span className="text-3xl">
-                {isScanning ? (
-                  <FontAwesomeIcon icon={faSpinner} />
-                ) : (
-                  <FontAwesomeIcon icon={faExpand} />
-                )}
-              </span>
-            </div> */}
-            {/* <h3 className="text-lg font-medium mb-2">
-              {isScanning ? "Sedang Scanning..." : "Siap untuk Scan"}
-            </h3> */}
-
-            <p className="text-center text-white  text-xs my-5">
-              Pastikan tidak ada cahaya kuat yang mengganggu selama proses
-              pemeriksaan
+            <p className={`text-2xl font-bold ${getStatusColor(lastScanData.status)}`}>
+              {lastScanData.status}
             </p>
+          </div>
+          <button
+            onClick={() => navigate("/scan")}
+            className="w-full mt-6 bg-cyan-500 text-black font-bold py-3 rounded-xl hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105"
+          >
+            Mulai Pindai Wajah
+          </button>
+        </div>
 
-            <button
-              onClick={handleScanDemo}
-              disabled={isScanning}
-              className={`px-6 py-3 rounded-full w-full font-medium transition-colors duration-200 ${
-                isScanning
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-gradient-to-r from-[#112C70] to-[#56E1E9] hover:shadow-xl hover:-translate-y-0.5"
-              }`}
-            >
-              {isScanning ? "Pemeriksaan Berlangsung..." : "Mulai Pemeriksaan"}
-            </button>
+        <div className="lg:col-span-2 flex flex-col gap-8">
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Ringkasan Pemindaian Terakhir
+            </h2>
+            <p className="text-slate-400 mb-1">
+              Tanggal: {lastScanData.date}
+            </p>
+            <p className="text-slate-200 text-lg leading-relaxed">
+              "{lastScanData.summary}"
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Detail Karotenoid per Area
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {lastScanData.areas.map((item) => (
+                <div key={item.name} className="bg-white/5 p-4 rounded-xl">
+                  <div className="flex items-center">
+                    <div
+                      className="w-3 h-3 rounded-full mr-3"
+                      style={{ backgroundColor: item.color }}
+                    ></div>
+                    <span className="text-slate-300">{item.name}</span>
+                  </div>
+                  <p className="text-2xl font-bold text-white mt-1">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+             <div
+                onClick={() => navigate("/history")}
+                className="group bg-transparent text-cyan-400 pt-4 rounded-xl mt-2 text-right font-semibold hover:text-white transition-colors cursor-pointer"
+              >
+                <span>Lihat Riwayat Lengkap</span>
+                <FontAwesomeIcon
+                  icon={faRightLong}
+                  className="ml-2 transform group-hover:translate-x-2 transition-transform"
+                />
+              </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
+
+// Impor gambar siluet lokal dari direktori assets
+import defaultProfileImage from "../assets/no-profile.png";
 
 const ProfileEditScreen = () => {
   const navigate = useNavigate();
@@ -9,6 +14,8 @@ const ProfileEditScreen = () => {
     age: 28,
     skinTone: "Kuning Langsat",
     goals: 450,
+    // Gunakan gambar yang sudah diimpor sebagai nilai awal
+    profileImage: defaultProfileImage,
   });
 
   const skinTones = [
@@ -27,6 +34,19 @@ const ProfileEditScreen = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          profileImage: event.target.result,
+        }));
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
   const handleSave = () => {
     console.log("Profile saved:", profile);
     alert("Perubahan berhasil disimpan!");
@@ -42,6 +62,35 @@ const ProfileEditScreen = () => {
         </p>
 
         <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 space-y-6">
+          <div className="flex justify-center mb-4">
+            <div className="relative">
+              <img
+                src={profile.profileImage}
+                alt="Profile"
+                // Menghapus kelas 'bg-slate-700' untuk memastikan background transparan
+                className="w-32 h-32 rounded-full object-cover border-4 border-cyan-400"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = defaultProfileImage;
+                }}
+              />
+              <label
+                htmlFor="profileImageUpload"
+                className="absolute bottom-0 right-0 bg-slate-600/80 text-white p-2 rounded-full cursor-pointer hover:bg-cyan-500 transition-colors"
+              >
+                <FontAwesomeIcon icon={faCamera} />
+                <input
+                  type="file"
+                  id="profileImageUpload"
+                  name="profileImage"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+
           <div>
             <label className="block text-slate-400 mb-2" htmlFor="name">
               Nama
